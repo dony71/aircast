@@ -12,14 +12,14 @@ from shairport import Shairport
 logger = logging.getLogger(__name__)
 
 
-def start_aircast(hostname, port):
+def start_aircast(hostname, port, preferred_chromecast=None, shairport_port=5000):
     sample_queue = Queue()
     io_loop = tornado.ioloop.IOLoop.current()
 
     stream_url = "http://{}:{}{}".format(hostname, port, STREAM_ROUTE)
-    caster = Caster(stream_url)
+    caster = Caster(stream_url, preferred_chromecast)
 
-    config = Config(sample_rate=44100, channels=2, bits_per_sample=16)
+    config = Config(sample_rate=44100, channels=2, bits_per_sample=16, port=shairport_port)
     broadcaster = Broadcaster(config, sample_queue, io_loop)
     shairport = Shairport(caster.device_name, config, sample_queue)
     app = make_app(broadcaster)

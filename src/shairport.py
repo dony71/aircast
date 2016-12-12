@@ -49,7 +49,7 @@ class Shairport(StoppableThread):
                       (self.config.bits_per_sample / 8) *
                       self.BROADCAST_INTERVAL)
 
-        args = ['shairport-sync', '--output=stdout', '-k',
+        args = ['shairport-sync','--port=%i' % self.config.port, '--output=stdout', '-k',
                 '--name={}'.format(self.advertised_name)]
         logger.debug("Starting shairport-sync with command '%s'",
                      ''.join(args))

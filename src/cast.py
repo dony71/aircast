@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 class Caster:
-    def __init__(self, stream_url):
+    def __init__(self, stream_url, preferred_chromecast=None):
         self.stream_url = stream_url
 
         logger.info("Searching for Chromecast devices...")
@@ -15,9 +15,20 @@ class Caster:
         if not chromecast_list:
             raise RuntimeError("Unable to find a Chromecast on the local network.")
 
-        chromecast_name = chromecast_list[0]
-        if len(chromecast_list) > 1:
-            logger.warn("Multiple Chromecast devices detected, using defaulting to Chromecast '%s'", chromecast_name)
+        chromecast_name = None
+        if preferred_chromecast:
+            preferred_index = chromecast_list.index(preferred_chromecast)
+            if preferred_index:
+                chromecast_name = preferred_chromecast
+            else:
+                logger.warn("Couldn't find preferred chromecast")
+                
+        if chromecast_name is None:
+            chromecast_name = chromecast_list[0]
+            if len(chromecast_list) > 1:
+                logger.warn("Multiple Chromecast devices detected")
+                logger.warn("Found Chromecasts: %s", ', '.join(chromecast_list))
+                logger.warn("Defaulting to Chromecast '%s'", chromecast_name)
 
         logger.info("Connecting to Chromecast '%s'", chromecast_name)
         self.chromecast = pychromecast.get_chromecast(
