@@ -2,10 +2,11 @@ import threading
 
 
 class Config:
-    def __init__(self, sample_rate, channels, bits_per_sample):
+    def __init__(self, sample_rate, channels, bits_per_sample, port):
         self.sample_rate = sample_rate
         self.channels = channels
         self.bits_per_sample = bits_per_sample
+        self.port = port
 
 
 class StoppableThread(threading.Thread):
